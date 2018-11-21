@@ -1,0 +1,30 @@
+This is a short description of the MarvelMind GPS driver software installation.
+
+Functionality:
+	This driver is not suited for commercial use.
+	This driver is only designed to accept Marvelmind communication messages.
+	Which means that no configuration is done.
+	It disables the Ashtech gps driver and reads the $GP gps messages and posts them to the uORB.
+
+2-versions exist of the driver, (gps_v1 and gps_v2).
+
+gps_v1 is designed to function in the PX4 autopilot pro flight stacked located at:
+	https://github.com/PX4/Firmware
+
+gps_v2 is designed to function for a custom px4 autopilot pro flight stack located at:
+	https://github.com/darenlee/PixhawkPSP_Firmware
+
+
+Given the PX4 firmware folder in ../px4;
+
+place the files located in gps_v2/devices/src into the following folder:
+	../px4/Firmware/src/drivers/gps/devices/src
+
+place the files located in gps_v2 into the following folder:
+	../px4/Firmware/src/drivers/gps
+
+In the file ../px4/Firmware/src/drivers/gps/CMakeLists.txt, include the Marvelmind driver by adding the line
+	devices/src/marv.cpp
+
+In the file ../px4/Firmware/src/drivers/drv_gps.h, include the Marvelmind driver mode in the enumeration
+	GPS_DRIVER_MODE_MARVELMIND
