@@ -28,3 +28,87 @@ In the file ../px4/Firmware/src/drivers/gps/CMakeLists.txt, include the Marvelmi
 
 In the file ../px4/Firmware/src/drivers/drv_gps.h, include the Marvelmind driver mode in the enumeration
 	GPS_DRIVER_MODE_MARVELMIND
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+NEW INSTALLATION
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+This is a short description of the MarvelMind GPS driver software installation.
+
+Functionality:
+	This driver is not suited for commercial use.
+	This driver is only designed to accept Marvelmind communication messages.
+	Which means that no configuration is done.
+	It disables the Ashtech gps driver and reads the $GP gps messages and posts them to the uORB.
+
+3-versions exist of the driver, (gps_v1, gps_v2 and gps_v3).
+
+gps_v1 is designed to function in the PX4 autopilot pro flight stacked located at:
+	https://github.com/PX4/Firmware
+
+gps_v2 is designed to function for a custom px4 autopilot pro flight stack located at:
+	https://github.com/darenlee/PixhawkPSP_Firmware
+
+gps_v3 is designed to function for a custom px4 autopilot pro flight stack located at:
+	https://github.com/mathworks/PX4−Firmware
+
+Given the PX4 firmware folder in ../px4;
+
+place the files located in gps_v3/devices/src into the following folder:
+	../px4/Firmware/src/drivers/gps/devices/src
+
+In the file ../px4/Firmware/src/drivers/gps/CMakeLists.txt, include the Marvelmind driver by adding the line
+	devices/src/marv.cpp
+
+In the file ../px4/Firmware/src/drivers/drv_gps.h, include the Marvelmind driver mode in the enumeration
+	GPS_DRIVER_MODE_MARVELMIND
+
+In the file ../px4/Firmware/src/drivers/gps/gps.cpp, add the following lines:
+	on line 89, include the marvelmind driver
+	#include "devices/src/marv.h"
+
+	on line 699, 
+		case GPS_DRIVER_MODE_MARVELMIND:
+                            _helper = new GPSDriverMarvelmind(&GPS::callback, this, &_report_gps_pos, _p_report_sat_info);
+                            break;
+	
+	line 790:
+	is	_mode = GPS_DRIVER_MODE_ASHTECH;
+	becomes	_mode = GPS_DRIVER_MODE_MARVELMIND;
+
+	line 794:
+	is 	_mode = GPS_DRIVER_MODE_UBX;
+	becomes _mode = GPS_DRIVER_MODE_MARVELMIND;
+
+	Add on line 798:
+		case GPS_DRIVER_MODE_MARVELMIND:
+                	_mode = GPS_DRIVER_MODE_UBX;
+                        usleep(500000); // tried all possible drivers. Wait a bit before next round
+                        break;
+
+	Add on line 880:
+		case GPS_DRIVER_MODE_MARVELMIND:
+			PX4_INFO("protocol: MARVELMIND");
+			break;
+
+	Add on line 1101:
+		} else if (!strcmp(myoptarg, "marv")) {
+                                mode = GPS_DRIVER_MODE_MARVELMIND;
+
+An example of the changes are included in gps_v3/gps.cpp. You can try copying this file to ../px4/Firmware/src/drivers/gps/gps.cpp, if it does not work, make the changes manually.
+
+
+	
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
