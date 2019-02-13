@@ -1,0 +1,3 @@
+[submodule "InertialNav"]
+	path = InertialNav
+	url = https://github.com/priseborough/InertialNav
