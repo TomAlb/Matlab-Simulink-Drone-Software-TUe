@@ -1,0 +1,217 @@
+%!TEX root = report.tex
+
+%% Add normal figure:
+%%%%%%%%%%%%%%%%%%%%%
+%\begin{figure} [H]
+%  \begin{center}
+%    \includegraphics[width=0.70\linewidth]{Figures/Ex1_excitation_ut.pdf}
+%    \caption{The caption}
+%    \label{fig:Ex1_excitation_ut}
+%  \end{center}
+%\end{figure}
+%%%%%%%%%%%%%%%%%%%%%
+
+%% Add subfigure:
+%%%%%%%%%%%%%%%%%%%%%
+%\begin{figure}[H]
+%\begin{center}
+%	\begin{subfigure}{0.49\textwidth} 	
+%    \includegraphics[scale=0.32]{Figures/Ass2_Bode_like_Sens.pdf}
+%    \caption{Bode-like plot of the Sensitivity}
+%    \label{fig:Ass2_Bode_like_Sens}
+%	\end{subfigure} 	
+%	\begin{subfigure}{0.49\textwidth}
+%    \includegraphics[scale=0.32]{Figures/Ass2_Bode_like_Comp_Sens.pdf}
+%    \caption{Bode-like plot of the Complementary Sensitivity}
+%    \label{fig:Ass2_Bode_like_Comp_Sens}
+%	\end{subfigure}
+%\end{center}
+%	\caption{}
+%	\label{fig: Ass2_Bode_like_Comp_Sens_overview}
+%\end{figure}
+%%%%%%%%%%%%%%%%%%%%%
+
+%% Add Table:
+%%%%%%%%%%%%%%%%%%%%%
+%\begin{table}[H]
+%	\centering
+%	\begin{tabular}{c c c}
+%		\textbf{Mode} & \textbf{Frequency} & \textbf{MSE}\\
+%		& \textbf{[Hz]} & \textbf{[mm]}\\
+%		\hline
+%		\multicolumn{3}{c}{\textbf{Centered Top Mass}}\\
+%		Mode 1 & 2.342 & 0.35\\
+%		Mode 2 & 18.2 & 0.3\\
+%		Mode 3 & 58.8 & 0.05\\
+%		\hline
+%		\multicolumn{3}{c}{\textbf{Offset Top Mass}}\\
+%		Coupled Mode & 13.1 & 0.5
+%	\end{tabular}
+%	\caption{Maximal Safe Excitation (MSE) of various modes under which the stress levels of beam are below the $50$ MPa limit.}
+%	\label{Table:MSE_Table}
+%\end{table}
+%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CHAPTER: Configuration
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Configuration}
+\section{Boot process alternation}
+After uploading code for the first time to the Pixhawk, all necessary software parts are present on the Pixhawk. However, they are not activated after booting the Pixhawk, which means the designed Simulink software is not running. In order to run the new software, the boor process of the Pixhawk needs to be alternated. This section describes the process to change the boot process.\\
+\newline
+An overview of all possible boot process changes can be found here \cite{Boot_Process}. Changing the boot process can be done in three different ways.
+\begin{enumerate}
+\item \textbf{Add \url{rc.txt}}. This is used to replace the complete boot process. If this file is present on the SD card, the boot process completely takes over the boot process written in the \url{rc.txt} file.
+\item \textbf{Add \url{config.txt}}. This is used after uploading code, to make changes to specific settings and configurations, without re-uploading code to the pixhawk.
+\item \textbf{Add \url{extras.txt}}. This is used to activate additional applications on top of the boot process.
+\end{enumerate}
+Although it is advised to only use \url{config.txt} and \url{extras.txt}, in this instance, we make use of \url{rc.txt} to replace the complete boot process. This makes sure that interfering modules are deactivated and only the necessary modules are active.
+In order to alternate the boot process, plug the micro-sd card in the PC, create a folder \url{etc} on it and create a file called \url{rc.txt} in the \url{etc} folder. The \url{rc.txt} file can be filled with:
+\begin{lstlisting}[language=sh]
+usleep 1000
+uorb start
+usleep 1000
+nshterm /dev/ttyACM0 &
+usleep 1000
+px4io start
+usleep 1000
+#commander start
+#usleep 1000
+# if this line is active, Simulink will not upload code to the Pixhawk via usb
+#mavlink start -d /dev/ttyS1 -b 115200
+#usleep 5000
+#dataman start
+#usleep 1000
+#navigator start
+#usleep 1000
+sh /etc/init.d/rc.sensors
+usleep 1000
+#sh /etc/init.d/rc.logging
+#usleep 1000
+attitude_estimator_q start
+position_estimator_inav start
+usleep 1000
+mtd start
+usleep 1000
+param load /fs/mtd_params
+usleep 1000
+rgbled start
+usleep 1000
+gps start
+usleep 1000
+px4_simulink_app start
+usleep 1000
+exit
+\end{lstlisting}
+During boot, this will start the essential modules, such as the \url{uorb} messages bus, the nsh terminal and the \url{px4_simulink_app}. Take note of the following:
+\begin{itemize}
+\item nshterm runs on \url{/dev/ttyACM0}, which is the usb connector. If this one is configured, it can be used in combination with putty to debug running modules on the Pixhawk. However, if running external mode is desired on \url{/dev/ttyACM0}, the nsh terminal interferes with external mode, resulting in connection failures. In that case, line 4 needs to be commented.
+\item \color{red}mavlink can be activated. Although the Matlab PSP\color{black}
+\end{itemize}
+\section{Install GPS Driver}
+This is a short description of the MarvelMind GPS driver software installation.\\
+\newline
+\textbf{Quick notes:}
+\begin{itemize}
+	\item This driver is not suited for commercial use.
+	\item This driver is only designed to accept Marvelmind communication messages. Which is defined as the NMEA 0183 sentenced based protocol, making use of the following GPS messages; GPRMC, GPGGA, GPVTG and GPZDA.
+	\item This translates to a driver, which detects the messages and starts processing, instead of configuring the GPS device.
+	\item The driver needs to disable the Ashtech gps driver and reads the GP gps messages and posts them to the uORB.
+\end{itemize}
+3-versions exist of the driver, (gps\_v1, gps\_v2 and gps\_v3). First of all, gps\_v1 is designed to function in the PX4 autopilot pro flight stacked located at \url{https://github.com/PX4/Firmware}.\\ 
+\newline
+The second version is gps\_v2, which is designed to function for a custom px4 autopilot pro flight stack located at \url{https://github.com/darenlee/PixhawkPSP\_Firmware}.\\
+\newline
+The third version, gps\_v3 is designed to function with the latest Pilot Support Package provided by Matlab. The PX4 firmware corresponding to the latest PSP can be found at \url{https://github.com/mathworks/PX4-Firmware.git}.\\
+\newline
+In this tutorial, only installing gps\_v3 is discussed. However, gps\_v1, gps\_v2 have a similar installation instruction.
+\subsection{Installing V2}
+Given the PX4 firmware folder in \url{../px4};
+\begin{itemize}
+	\item place the files located in \url{gps\_v2/devices/src} into the following folder \url{../px4/Firmware/src/drivers/gps/devices/src}
+	\item place the files located in \url{gps\_v2} into the following folder: \url{../px4/Firmware/src/drivers/gps}
+	\item In the file \url{../px4/Firmware/src/drivers/gps/CMakeLists.txt}, include the Marvelmind driver by adding the line \begin{lstlisting}[language=c++]
+	devices/src/marv.cpp
+	\end{lstlisting}
+	\item In the file \url{../px4/Firmware/src/drivers/drv\_gps.h}, include the Marvelmind driver mode in the enumeration
+	\begin{lstlisting}[language=c++]
+	GPS_DRIVER_MODE_MARVELMIND
+	\end{lstlisting}
+\end{itemize}
+\subsection{Installing V3}
+Given the PX4 firmware folder in \url{../px4}
+
+place the files located in \url{gps_v3/devices/src} into the following folder:
+\url{../px4/Firmware/src/drivers/gps/devices/src}
+
+In the file \url{../px4/Firmware/src/drivers/gps/CMakeLists.txt}, include the Marvelmind driver by adding the line
+\begin{lstlisting}[language=c++]
+	devices/src/marv.cpp
+\end{lstlisting}
+
+
+In the file \url{../px4/Firmware/src/drivers/drv_gps.h}, include the Marvelmind driver mode in the enumeration
+\begin{lstlisting}[language=c++]
+	GPS_DRIVER_MODE_MARVELMIND
+\end{lstlisting}
+
+
+In the file \url{../px4/Firmware/src/drivers/gps/gps.cpp}, add the following lines:
+on line 89, include the marvelmind driver
+\begin{lstlisting}[language=c++]
+	#include "devices/src/marv.h"
+\end{lstlisting}
+
+on line 699, 
+\begin{lstlisting}[language=c++]
+	case GPS_DRIVER_MODE_MARVELMIND:
+	_helper = new GPSDriverMarvelmind(&GPS::callback, this, &_report_gps_pos, _p_report_sat_info);
+	break;
+\end{lstlisting}
+
+
+line 790:
+is	
+\begin{lstlisting}[language=c++]
+	_mode = GPS_DRIVER_MODE_ASHTECH;
+\end{lstlisting}
+becomes	
+\begin{lstlisting}[language=c++]
+	_mode = GPS_DRIVER_MODE_MARVELMIND;
+\end{lstlisting}
+
+line 794:
+is 	
+\begin{lstlisting}[language=c++]
+	_mode = GPS_DRIVER_MODE_UBX;
+\end{lstlisting}
+becomes 
+\begin{lstlisting}[language=c++]
+	_mode = GPS_DRIVER_MODE_MARVELMIND;
+\end{lstlisting}
+
+Add on line 798:
+\begin{lstlisting}[language=c++]
+	case GPS_DRIVER_MODE_MARVELMIND:
+	_mode = GPS_DRIVER_MODE_UBX;
+	usleep(500000); // tried all possible drivers. Wait a bit before next round
+	break;
+\end{lstlisting}
+
+
+Add on line 880:
+\begin{lstlisting}[language=c++]
+	case GPS_DRIVER_MODE_MARVELMIND:
+	PX4_INFO("protocol: MARVELMIND");
+	break;
+\end{lstlisting}
+
+
+Add on line 1101:
+\begin{lstlisting}[language=c++]
+	} else if (!strcmp(myoptarg, "marv")) {
+	mode = GPS_DRIVER_MODE_MARVELMIND;
+\end{lstlisting}
+
+
+An example of the changes are included in \url{gps_v3/gps.cpp}. You can try copying this file to \url{../px4/Firmware/src/drivers/gps/gps.cpp}, if it does not work, make the changes manually.
+\section{Marvelmind IPS}

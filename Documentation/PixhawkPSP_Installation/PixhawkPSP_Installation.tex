@@ -1,0 +1,91 @@
+%
+% TU/e Style Master Thesis template for LaTeX
+%
+% Public version 1.0
+% 2017 Tom Albers
+%
+% THIS IS THE MAIN FILE (i.e. compile this file, compiling the others directly won't work)
+%
+\documentclass[a4paper,10pt,twoside]{report}
+
+%all the other includes etc. are done in the thesis.sty file.
+\usepackage{Thesis}
+\usepackage{bookmark}
+\usepackage[english]{babel}
+\newtheorem{theorem}{Theorem}
+\newtheorem{assumption}{Assumption}
+
+
+
+\begin{document}
+	%% Blank page
+	% \afterpage{\blankpage}
+	
+%	\title{Matlab Pixhawk PSP}
+	\author{Tom Albers}
+	
+ 	\pagenumbering{roman}
+ 	%%------------TitlePage----------------------
+	\include{./Chap_general/Titlepage}
+
+%	\include{./Chap_general/abstract}
+%	\makeumiabstract
+%	\afterpage{\blankpage}
+	%%------------Table of Contents----------------------
+	\maketableofcontents	
+	%%------------List of Figures----------------------
+%	\listoffigures
+	%%------------List of Tables-----------------------
+%	\listoftables
+	%%------------List of Listings---------------------
+%	\lstlistoflistings
+	%%-----------Abbreviations-------------------------
+%	\include{./Chap_general/Abbreviations}
+	
+%	\include{./Chap_general/Acronyms}
+%	\clearpage
+	\begin{multicols}{2}
+%	\printglossary[type=\acronymtype]
+	\end{multicols}
+%	\printglossary
+	%%-----------Acknowledgments-----------------------
+%	 \include{acknowledgments}
+	%%-----------Dedication----------------------------
+%	\include{dedication}
+	%%-----------change single space to double space---
+	%\doublespacing
+%    \afterpage{\blankpage}
+	\afterpage{}
+    \setcounter{secnumdepth}{6}
+    \setcounter{tocdepth}{4}
+%    \newpage
+    \pdfbookmark{\contentsname}{toc}
+%%-----------Main Matter---------------------------
+\pagenumbering{arabic}
+	%% Disclaimer
+%\include{./Chapters/Disclaimer}	
+	%% Installation on Ubuntu
+\include{./Chapters/Installation_Linux}
+	%% Installation on Windows
+\include{./Chapter/Installation_Windows}
+	%% Configuration
+\include{./Chapters/Configuration}		
+	%% Tools
+\include{./Chapters/Tools}
+	%% Issues
+\include{./Chapters/Issues}
+\color{blue}
+	%% Installation Notes
+%\include{./Chapters/Installation_Notes}
+%\include{./Chapters/Notes}
+\color{black}
+%\bookmarksetup{startatroot}
+
+%%-----------Back Matter---------------------------
+%%-----------Bibliography--------------------------
+%\nocite{*}
+\bibliographystyle{ieeetr}
+\bibliography{./Bibliography/Links}{}
+
+
+\end{document} 

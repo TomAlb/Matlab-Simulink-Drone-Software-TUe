@@ -1,0 +1,88 @@
+%!TEX root = report.tex
+
+%% Add normal figure:
+%%%%%%%%%%%%%%%%%%%%%
+%\begin{figure} [H]
+%  \begin{center}
+%    \includegraphics[width=0.70\linewidth]{Figures/Ex1_excitation_ut.pdf}
+%    \caption{The caption}
+%    \label{fig:Ex1_excitation_ut}
+%  \end{center}
+%\end{figure}
+%%%%%%%%%%%%%%%%%%%%%
+
+%% Add subfigure:
+%%%%%%%%%%%%%%%%%%%%%
+%\begin{figure}[H]
+%\begin{center}
+%	\begin{subfigure}{0.49\textwidth} 	
+%    \includegraphics[scale=0.32]{Figures/Ass2_Bode_like_Sens.pdf}
+%    \caption{Bode-like plot of the Sensitivity}
+%    \label{fig:Ass2_Bode_like_Sens}
+%	\end{subfigure} 	
+%	\begin{subfigure}{0.49\textwidth}
+%    \includegraphics[scale=0.32]{Figures/Ass2_Bode_like_Comp_Sens.pdf}
+%    \caption{Bode-like plot of the Complementary Sensitivity}
+%    \label{fig:Ass2_Bode_like_Comp_Sens}
+%	\end{subfigure}
+%\end{center}
+%	\caption{}
+%	\label{fig: Ass2_Bode_like_Comp_Sens_overview}
+%\end{figure}
+%%%%%%%%%%%%%%%%%%%%%
+
+%% Add Table:
+%%%%%%%%%%%%%%%%%%%%%
+%\begin{table}[H]
+%	\centering
+%	\begin{tabular}{c c c}
+%		\textbf{Mode} & \textbf{Frequency} & \textbf{MSE}\\
+%		& \textbf{[Hz]} & \textbf{[mm]}\\
+%		\hline
+%		\multicolumn{3}{c}{\textbf{Centered Top Mass}}\\
+%		Mode 1 & 2.342 & 0.35\\
+%		Mode 2 & 18.2 & 0.3\\
+%		Mode 3 & 58.8 & 0.05\\
+%		\hline
+%		\multicolumn{3}{c}{\textbf{Offset Top Mass}}\\
+%		Coupled Mode & 13.1 & 0.5
+%	\end{tabular}
+%	\caption{Maximal Safe Excitation (MSE) of various modes under which the stress levels of beam are below the $50$ MPa limit.}
+%	\label{Table:MSE_Table}
+%\end{table}
+%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CHAPTER: Installation on Windows 10
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Installation on Windows 10}
+Installation is based on a clean Windows 10 6e-bit installed PC. Furthermore, Matlab R2017B is used during this tutorial. Other software versions can be used but are not tested. If using different software versions, keep in mind you might need to fix bugs and issues not described in this tutorial.\\
+\newline 
+Furthermore, a bash terminal is used on Windows 10. Keep in mind Linux utilizes sudo commands, which results in different user privileges on the laptop. Using these commands wrongly might result in improper functioning software, or even in non-functioning software. Therefore, pay great attention to use to right user rights during this tutorial.\\
+\newline
+During the following sections, it is assumed that installing windows applications is common knowledge and thus anyone can install software provided the proper installer files.
+\section{Preliminary configurations}
+In this section, preliminary configurations are explained. These configurations are needed for TUe functionality or for user convenience. It is assumed, the user has these options already configured to its own favors. If this is not the case, take a look in this section to make the proper configurations and installations.
+\subsection{Installing Matlab}
+Since the Matlab Pilot Support Package is all about Matlab. It is assumed matlab is already installed. IF this is not the case, please follow \cite{MatlabWindows}. Best would be to install R2017b, with at least the following toolboxes:
+\begin{itemize}
+	\item Matlab
+	\item Simulink
+	\item Embedded Coder
+	\item Matlab Coder
+	\item Simulink Coder
+	\item Aerospace Blockset
+	\item Simulink Control Design
+\end{itemize}
+\subsection{Github Desktop}
+In order to download the already developed software available on GIT, it is usefull to install github desktop. The github desktop app can be downloaded from \url{https://desktop.github.com/}. The github allows to maintain software and projects under revision control. Since already available software is set under revision control, it can be approached via the desktop app. Configuring Github desktop is explained in a later section.
+\subsection{Installing Bash on Windows 10}
+Lastly, a Linux like environment is needed in order to build and upload the PX4 code to the Pixhawk. This can be achieved by installing Ubuntu 18.04 LTS bash environment, which is located in the store. A tutorial on how to install Bash can be found at \cite{BashOnWindows10}.
+\section{Install and Configuring PSP on Windows 10}
+From here, the important installations and configurations are described in order to be able to use the Matlab Pixhawk PSP. 
+\subsection{Matlab Pixhawk PSP Installation}
+\cite{MathworksPSP_1}, \cite{MathworksPSP_2}
+\subsection{Installing additional compiler}
+\subsection{Downloading software manually}
+\subsection{Building code}
+\subsection{Add Simulink software to PX4 Firmware}
+\subsection{Uploading code to Pixhawk in Windows 10}

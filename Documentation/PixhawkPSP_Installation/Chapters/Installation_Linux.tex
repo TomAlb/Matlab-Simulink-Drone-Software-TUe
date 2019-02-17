@@ -1,0 +1,363 @@
+%!TEX root = report.tex
+
+%% Add normal figure:
+%%%%%%%%%%%%%%%%%%%%%
+%\begin{figure} [H]
+%  \begin{center}
+%    \includegraphics[width=0.70\linewidth]{Figures/Ex1_excitation_ut.pdf}
+%    \caption{The caption}
+%    \label{fig:Ex1_excitation_ut}
+%  \end{center}
+%\end{figure}
+%%%%%%%%%%%%%%%%%%%%%
+
+%% Add subfigure:
+%%%%%%%%%%%%%%%%%%%%%
+%\begin{figure}[H]
+%\begin{center}
+%	\begin{subfigure}{0.49\textwidth} 	
+%    \includegraphics[scale=0.32]{Figures/Ass2_Bode_like_Sens.pdf}
+%    \caption{Bode-like plot of the Sensitivity}
+%    \label{fig:Ass2_Bode_like_Sens}
+%	\end{subfigure} 	
+%	\begin{subfigure}{0.49\textwidth}
+%    \includegraphics[scale=0.32]{Figures/Ass2_Bode_like_Comp_Sens.pdf}
+%    \caption{Bode-like plot of the Complementary Sensitivity}
+%    \label{fig:Ass2_Bode_like_Comp_Sens}
+%	\end{subfigure}
+%\end{center}
+%	\caption{}
+%	\label{fig: Ass2_Bode_like_Comp_Sens_overview}
+%\end{figure}
+%%%%%%%%%%%%%%%%%%%%%
+
+%% Add Table:
+%%%%%%%%%%%%%%%%%%%%%
+%\begin{table}[H]
+%	\centering
+%	\begin{tabular}{c c c}
+%		\textbf{Mode} & \textbf{Frequency} & \textbf{MSE}\\
+%		& \textbf{[Hz]} & \textbf{[mm]}\\
+%		\hline
+%		\multicolumn{3}{c}{\textbf{Centered Top Mass}}\\
+%		Mode 1 & 2.342 & 0.35\\
+%		Mode 2 & 18.2 & 0.3\\
+%		Mode 3 & 58.8 & 0.05\\
+%		\hline
+%		\multicolumn{3}{c}{\textbf{Offset Top Mass}}\\
+%		Coupled Mode & 13.1 & 0.5
+%	\end{tabular}
+%	\caption{Maximal Safe Excitation (MSE) of various modes under which the stress levels of beam are below the $50$ MPa limit.}
+%	\label{Table:MSE_Table}
+%\end{table}
+%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CHAPTER: Installation on Ubuntu
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Installation on Ubuntu}
+Installation is based on a clean Ubuntu 18.04.1 LTS installed PC. Furthermore, Matlab R2017B is used during this tutorial. Other software versions can be used but are not tested. If using different software versions, keep in mind you need to fix bugs and issues not described in this tutorial.\\
+\newline 
+Furthermore, Ubuntu utilizes sudo commands, which results in different user privileges on the laptop. Using these commands wrongly might result in improper functioning software, or even in non-functioning software. Therefore, pay great attention to use to right user rights during this tutorial.
+\section{Preliminary configurations}
+In this section, preliminary configurations are explained. These configurations are needed for TUe functionality or for user convenience. It is assumed, the user has these options already configured to its own favors. If this is not the case, take a look in this section to make the proper configurations and installations.
+\subsection{Connect to TU/e WiFi}
+From a clean Ubuntu 18.04 LTS, connect to the TU/e network \cite{Connecting2Network}.\\
+\newline
+Connect to TU/e WiFi
+Right click on the wireless symbol in your top-panel and select:\\
+'tue-wpa2'\\
+\newline
+Move to tab "WiFi Security" and use these settings:
+\begin{table}[H]
+	\centering
+	\begin{tabular}{l r}
+		Security: &		WPA \& WPA2 Enterprise\\
+		Protected: & 		Protected EAP (PEAP)\\
+		Anonymous identity: & 	sXXXXXX\\
+		CA Certificate: & 	'No CA certificate is required'\\
+		PEAP version: & 		Automatic\\
+		Inner authentication: & 	MSCHAPv2\\
+		Username: & 		sXXXXXX\\
+		Password: & 		XXXXXXX\\
+	\end{tabular}
+\end{table}
+Update dependencies. First start a Terminal (Ctrl + Alt + t)
+\begin{lstlisting}[language=sh]
+sudo apt-get update
+\end{lstlisting}
+Activate colors in terminal
+\begin{lstlisting}[language=sh]
+gedit home/<username>/.bashrc
+\end{lstlisting}
+Uncomment the line by removing \#:
+\begin{lstlisting}[language=sh]
+# force_color_prompt=yes
+\end{lstlisting}
+Save and restart the terminal.
+\subsection{Install Terminator}
+Terminator is a command prompt shell extensions, which allows easy configuration of multiple tabs in a single screen. This feature is not needed in order to use the drone code, it is only installed for user convenience. Installing terminator is based on \cite{Col_Term}.
+\begin{lstlisting}[language=sh]
+sudo apt-get install terminator
+\end{lstlisting}
+after installation
+\begin{enumerate}
+	\item Open "Terminator".
+	\item Make the set-up to be saved: some split ups
+	\begin{enumerate}
+		\item Right Click.
+		\item Choose "split horizontally" or "split vertically"
+	\end{enumerate}
+	\item Continue the previous step, until you are happy.
+	\item Right Click.
+	\item Choose "preferences".
+	\item Pick tab "layout".
+	\item Click "add".
+	\item Enter a name (= $<$your chosen name$>$).
+	\item Press "enter".
+	\item Click "close".
+\end{enumerate}
+Configuring Terminator as default terminal\\
+Open a terminal (Ctrl + Alt + t)
+\begin{lstlisting}[language=sh]
+cp /usr/share/applications/terminator.desktop home/<username>/.local/share/applications
+\end{lstlisting}
+Open launcher file
+\begin{lstlisting}[language=sh]
+gedit home/<username>/.local/share/applications/terminator.desktop
+\end{lstlisting}
+Find the first occurrence of Exec=terminator and add -ml <your chosen name> (So, it should now be 
+\begin{lstlisting}[language=sh]
+Exec=terminator -ml <your chosen name>)
+\end{lstlisting}
+Save and close the file\\
+Log-out and log back in.\\
+Press the windows key on your Keyboard, and search for terminator.\\
+Drag the terminator icon to the launcher (the menu with icons on the left). You can now always start the terminator with your layout by clicking the icon.
+\subsection{Installing Metacity}
+Metacity is a window manager in Ubuntu. Metacity has specific tasks, such as window management, keyboard shortcuts and themes, that might be convenient for the user. It is not necessarily needed to install Metacity. Additional information on functionality and configurations can be found \cite{Metacity}.\\
+Open a terminal (Ctrl + Alt + t)
+\begin{lstlisting}[language=sh]
+sudo apt-get update
+sudo apt-get install gnome-session-flashback
+\end{lstlisting}
+After installation, reboot.\\
+In the login prompt, choose GNOME Flashback (Metacity).
+\subsection{Installing Matlab}
+Detailed information can be found \cite{Matlab_Install}.\\
+First, install cifs-utils. Open a terminal (Ctrl + Alt + t)
+\begin{lstlisting}[language=sh]
+sudo apt-get install cifs-utils
+\end{lstlisting}
+Make a directory to mount the matlab network location:
+\begin{lstlisting}[language=sh]
+sudo mkdir /mnt/matlab
+\end{lstlisting}
+Mount software distribution tree:
+\begin{lstlisting}[language=sh]
+mount -t cifs //campusmp.campus.tue.nl/software/mworks/linux /mnt/matlab -o username=<yourusernamehere> 
+\end{lstlisting}
+Go to the specific Matlab folder:
+\begin{lstlisting}[language=sh]
+cd /mnt/matlab/R2017b
+\end{lstlisting}
+Start installing Matlab:
+\begin{lstlisting}[language=sh]
+sudo ./install
+\end{lstlisting}
+\section{Install and Configuring PSP on Ubuntu}
+From this section on, installing and configuring software packages in order to utilize the drone code is explained. It is advised to go through the following sections with great attention, in order to limit the amount of errors during building/uploading and running the code.
+\subsection{Install GIT}
+Install Git
+\begin{lstlisting}[language=sh]
+sudo apt-get install git
+\end{lstlisting}
+\subsection{Matlab Pixhawk PSP Installation}
+Download the Matlab Pixhawk PSP (PX4PSP\_v3\_0\_4\_351\_R2017b.mltbx) from \cite{Matlab_PSP}.\\
+Open Matlab by opening a terminal and run:
+\begin{lstlisting}[language=sh]
+matlab
+\end{lstlisting}
+Create a folder in Documents:
+\begin{lstlisting}[language=sh]
+mkdir home/<username>/Documents/MATLAB/PX4_Project
+\end{lstlisting}
+Copy the PSP to the project folder:
+\begin{lstlisting}[language=sh]
+cp home/<username>/Downloads/PX4PSP_v3_0_4_351_R2017b.mltbx home/<username>/Documents/MATLAB/PX4_Project
+\end{lstlisting}
+In Matlab, navigate to the PSP location:
+\begin{lstlisting}[language=sh]
+cd home/<username>/Documents/MATLAB/PX4_Project
+\end{lstlisting}
+Double click the .mltbx and click install.
+Give Matlab user permissions
+\begin{lstlisting}[language=sh]
+sudo chmod -R 777 /usr/local/MATLAB/R2017b/toolbox/local
+\end{lstlisting}
+And create a directory px4:
+\begin{lstlisting}[language=sh]
+mkdir home/<username>/Documents/MATLAB/PX4_Project/px4
+cd home/<username>/Documents/MATLAB/PX4_Project/px4
+\end{lstlisting}
+Run the following command in Matlab:
+\begin{lstlisting}[language=sh]
+PixhawkPSP('/home/<username>/Documents/MATLAB/PX4_Project/px4')
+\end{lstlisting}
+If this command crashes, go to \cite{PSPLoadError}.\\
+Or install the canberra package
+\begin{lstlisting}[language=sh]
+sudo apt-get install libcanberra-gtk-module
+\end{lstlisting}
+If all goes well, the GUI starts, press Download Firmware. 
+\begin{enumerate}
+	\item \textbf{Download results in errors.} This will be fixed later on.
+	\item \textbf{Asked for username and password.} Press enter and continue anyways.
+\end{enumerate} 
+Basically most of the necessary files are downloaded. The missing files, which are most likely NxWidgets.git and tools.git, are from the px4 firmware, which will be downloaded manually later on, see section \ref{Downloading Software manually}. After the download in the GUI is finished, save and exit the GUI.\\
+\newline
+Open a terminal (Ctrl + Alt + t) and go to the project folder in Ubuntu
+\begin{lstlisting}[language=sh]
+cd home/<username>/Documents/MATLAB/PX4_Project/px4/Linux_setup
+\end{lstlisting}
+Provide the bash script of executing rights and run it:
+\begin{lstlisting}[language=sh]
+chmod +x ubuntu_sim_common_deps.bash
+sudo ./ubuntu_sim_common_deps.bash
+\end{lstlisting}
+\subsection{Installing additional compiler}
+Matlab utilizes gcc-arm-none-eabi-5\_4-2017q2 compiler, which is not supported by the PX4 code due to missing optimization tools. Therefore, the old compiler needs to be removed and a newer one needs to be installed. The following commands and instructions can be found at \cite{GCC_Compiler}.\\
+First run:
+\begin{lstlisting}[language=sh]
+sudo apt-get install python-serial openocd \
+flex bison libncurses5-dev autoconf texinfo \
+libftdi-dev libtool zlib1g-dev -y
+\end{lstlisting}
+Remove any old versions of the arm-none-eabi toolchain.
+\begin{lstlisting}[language=sh]
+sudo apt-get remove gcc-arm-none-eabi gdb-arm-none-eabi binutils-arm-none-eabi gcc-arm-embedded
+sudo add-apt-repository --remove ppa:team-gcc-arm-embedded/ppa
+\end{lstlisting}
+Go to the home directory
+\begin{lstlisting}[language=sh]
+cd home/<username>
+\end{lstlisting}
+By running, the following command, an overview of folders is shown.
+\begin{lstlisting}[language=sh]
+ls
+\end{lstlisting}
+Search for old gcc-arm-none-eabi directories and if present, remove them. This includes directories and .tar.bz2 files.
+\begin{lstlisting}[language=sh]
+rm -rf gcc-arm-none-...
+\end{lstlisting}
+Edit the bashrc file by running:
+\begin{lstlisting}[language=sh]
+gedit .bashrc
+\end{lstlisting}
+If, most likely at the end of the file, a line exist in the form of:
+\begin{lstlisting}[language=sh]
+export PATH=/home/<username>/gcc-arm-none-eabi-.../bin:$PATH
+\end{lstlisting}
+Remove it entirely. The new GCC cross compiler can be installed by running:
+\begin{lstlisting}[language=sh, breaklines=true]
+pushd .
+cd home/<username>
+wget https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm /7-2017q4/gcc-arm-none-eabi-7-2017-q4-major-linux.tar.bz2
+tar -jxf gcc-arm-none-eabi-7-2017-q4-major-linux.tar.bz2
+exportline="export PATH=$HOME/gcc-arm-none-eabi-7-2017-q4-major/bin:\$PATH"
+if grep -Fxq "$exportline" home/<username>/.profile; then echo nothing to do ; else echo $exportline >> home/<username>/.profile; fi
+popd
+\end{lstlisting}
+After popd appears in the terminal, press enter. Once the command is executed and finished, restart the machine. After the reboot, run in a terminal the following command:
+\begin{lstlisting}[language=sh]
+arm-none-eabi-gcc --version
+\end{lstlisting}
+If everything is properly installed, the result should look something like:
+\begin{lstlisting}[language=sh]
+arm-none-eabi-gcc (GNU Tools for Arm Embedded Processors 7-2017-q4-major) 7.2.1 20170904 (release) [ARM/embedded-7-branch revision 255204]
+Copyright (C) 2017 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+\end{lstlisting}
+\subsection{Downloading Software manually}\label{Downloading Software manually}
+During previous PSP installation step, a lot of errors occurred regarding downloading firmware, which will be mostly solved during this section, where the firmware is manually downloaded.\\
+\newline
+Open a terminal and go to the project folder:
+\begin{lstlisting}[language=sh]
+cd home/<username>/Documents/MATLAB/PX4_Project/px4/
+\end{lstlisting}
+Start downloading the firmware manually by running:
+\begin{lstlisting}[language=sh]
+git clone https://github.com/mathworks/PX4-Firmware.git
+\end{lstlisting}
+Copy the px4\_simulink\_app module directory to the new firmware directory.
+\begin{lstlisting}[language=sh]
+cd home/<username>/Documents/MATLAB/PX4_Project/px4
+cp -a Firmware/src/modules/px4_simulink_app/ PX4-Firmware/src/modules
+\end{lstlisting}
+Rename the old Firmware folder and copy the new firmware folder:
+\begin{lstlisting}[language=sh]
+cd home/<username>/Documents/MATLAB/PX4_Project/px4
+mv Firmware Firmware_old
+cp -a PX4-Firmware Firmware
+\end{lstlisting}
+\subsection{Building code}
+Code building has the advantage that it will look for changes in the software code and rebuild only changed parts of the code. This means the px4 firmware code needs to be build once and after that, only the Simulink part needs to be rebuild.\\
+\newline
+Building code can be done in Matlab, however, this is quite a slow process. Therefore, it is advised to build the code for the first time outside Matlab. After the initial build process succeeded, all other building procedures can be commanded in Matlab. In order to build the software for the first time, run in a terminal:
+\begin{lstlisting}[language=sh]
+cd home/<username>/Documents/MATLAB/PX4_Project/px4/Firmware
+make px4fmu-v3_default
+\end{lstlisting}
+\subsection{Add Simulink software to PX4 Firmware}
+Add the Simulink software to the make file, by editing the make file:
+\begin{lstlisting}[language=sh]
+cd home/<username>/Documents/MATLAB/PX4_Project/px4
+gedit Firmware/cmake/configs/nuttx_px4fmu-v3_default.cmake
+\end{lstlisting}
+Add the Simulink module to the build code:
+\begin{lstlisting}[language=sh]
+modules/px4_simulink_app
+\end{lstlisting}
+Return to the Matlab GUI:
+\begin{lstlisting}[language=sh]
+PixhawkPSP('/home/<username>/Documents/MATLAB/PX4_Project/px4')
+\end{lstlisting}
+Press validate firmware and check for errors. Save settings and Exit.
+In Matlab, open an example, such as "px4demo\_rgbled.slx" in the example folder  in px4, and build the code. If the build does not work, try changing permissions of the Firmware directory by typing in a terminal:
+\begin{lstlisting}[language=sh]
+sudo chmod -R 777 /home/<username>/Documents/MATLAB/PX4_Project/px4/Firmware
+\end{lstlisting}
+\color{red}
+MISSING STEP: WHERE IS THE BUILD FIRMWARE OPTION SELECTED IN THE GUI?? px4fmu-v3\_default??
+\color{black}
+\subsection{Uploading code to Pixhawk in Ubuntu}
+After building is completed, the code can be uploaded by opening a terminal, and running the following commands:
+\begin{lstlisting}[language=sh]
+cd home/<username>/Documents/MATLAB/PX4_Project/px4/Firmware
+make px4fmu-v3_default upload
+\end{lstlisting}
+If the upload results in errors, add user to the dialout group, \cite{Dialout}:
+\begin{lstlisting}[language=sh]
+sudo usermod -a -G dialout $USER
+\end{lstlisting}
+Logout and login again. Uploading code should now be possible, unless the boot process alternation has not been configured on the Pixhawk.\\
+\newline
+Lastly, the file \url{/home/<username>/Documents/MATLAB/PX4_Project/px4/Firmware/Tools/px_uploader.py} is responsible for uploading code to the Pixhawk. Changing the extending the timeout period might help reducing uploading errors. Additonal changes to the code might help improving the number of successful uploads, however, this is not explored yet.\\
+\newline
+To change the timeout settings, run:
+\begin{lstlisting}[language=sh]
+cd /home/<username>/Documents/MATLAB/PX4_Project/px4/Firmware/Tools
+gedit px_uploader.py
+\end{lstlisting}
+Go approximately to line 193, which should contain:
+\begin{lstlisting}[language=Python]
+    def __init__(self, portname, baudrate_bootloader, baudrate_flightstack):
+# open the port, keep the default timeout short so we can poll quickly
+self.port = serial.Serial(portname, baudrate_bootloader, timeout=0.5)
+self.otp = b''
+self.sn = b''
+self.baudrate_bootloader = baudrate_bootloader
+self.baudrate_flightstack = baudrate_flightstack
+self.baudrate_flightstack_idx = -1
+\end{lstlisting}
+And change the timeout setting from $0.5$ to, for instance $10$.

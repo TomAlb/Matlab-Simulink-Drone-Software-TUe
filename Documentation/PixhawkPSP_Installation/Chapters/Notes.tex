@@ -1,0 +1,17 @@
+\chapter{What did we learn?}
+\section{Finished:}
+\begin{itemize}
+	\item If we want to arm the motors, the RC NEEDS to be connected, otherwise the motors will stay disarmed. This feature is inherited from the PX4 flight stack.
+	In nsh run px4io status to see the arming status and the servo outputs (motor pwm values).
+\end{itemize}
+
+\section{Temporary Fix:}
+\begin{itemize}
+	\item CSC Parameters provided by the PSP from Matlab results in an error during building, which is due to the fact that it tries to include a file which has a path which the cmake procedure can not handle. Main guess would be that it includes a space somewhere. \textbf{Temporary Solution:} In the software, all Pixhawk\_CSC instances are removed in file InitFcn\_R2017b.m and it is saved as InitFcn\_R2017b\_no\_csc.m. In the Simulink file PX4\_Run\_Mode\_R2017b.slx the initialization file is also changed to the latter. Furthermore, if a solution is found for the CSC problem, the InitFcn\_R2017b.m can be used again.
+\end{itemize}
+
+\section{Issues:}
+\begin{itemize}
+	\item Uploading issues. Every once and a while, the upload procedure aborts resulting in a failed code upload to the Pixhawk.
+	\item CSC Parameters provided by the PSP from Matlab results in an error during building, which is due to the fact that it tries to include a file which has a path which the cmake procedure can not handle. Main guess would be that it includes a space somewhere.
+\end{itemize}

@@ -1,0 +1,122 @@
+%!TEX root = report.tex
+
+%% Add normal figure:
+%%%%%%%%%%%%%%%%%%%%%
+%\begin{figure} [H]
+%  \begin{center}
+%    \includegraphics[width=0.70\linewidth]{Figures/Ex1_excitation_ut.pdf}
+%    \caption{The caption}
+%    \label{fig:Ex1_excitation_ut}
+%  \end{center}
+%\end{figure}
+%%%%%%%%%%%%%%%%%%%%%
+
+%% Add subfigure:
+%%%%%%%%%%%%%%%%%%%%%
+%\begin{figure}[H]
+%\begin{center}
+%	\begin{subfigure}{0.49\textwidth} 	
+%    \includegraphics[scale=0.32]{Figures/Ass2_Bode_like_Sens.pdf}
+%    \caption{Bode-like plot of the Sensitivity}
+%    \label{fig:Ass2_Bode_like_Sens}
+%	\end{subfigure} 	
+%	\begin{subfigure}{0.49\textwidth}
+%    \includegraphics[scale=0.32]{Figures/Ass2_Bode_like_Comp_Sens.pdf}
+%    \caption{Bode-like plot of the Complementary Sensitivity}
+%    \label{fig:Ass2_Bode_like_Comp_Sens}
+%	\end{subfigure}
+%\end{center}
+%	\caption{}
+%	\label{fig: Ass2_Bode_like_Comp_Sens_overview}
+%\end{figure}
+%%%%%%%%%%%%%%%%%%%%%
+
+%% Add Table:
+%%%%%%%%%%%%%%%%%%%%%
+%\begin{table}[H]
+%	\centering
+%	\begin{tabular}{c c c}
+%		\textbf{Mode} & \textbf{Frequency} & \textbf{MSE}\\
+%		& \textbf{[Hz]} & \textbf{[mm]}\\
+%		\hline
+%		\multicolumn{3}{c}{\textbf{Centered Top Mass}}\\
+%		Mode 1 & 2.342 & 0.35\\
+%		Mode 2 & 18.2 & 0.3\\
+%		Mode 3 & 58.8 & 0.05\\
+%		\hline
+%		\multicolumn{3}{c}{\textbf{Offset Top Mass}}\\
+%		Coupled Mode & 13.1 & 0.5
+%	\end{tabular}
+%	\caption{Maximal Safe Excitation (MSE) of various modes under which the stress levels of beam are below the $50$ MPa limit.}
+%	\label{Table:MSE_Table}
+%\end{table}
+%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CHAPTER: Kalman Filter and delayed measurements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Installation}
+
+\section{Putty}
+By using putty, command messages can be send and received to the PX4 system console. To install putty, run in a terminal:
+\begin{lstlisting}[language=sh]
+sudo apt-get install -y putty
+\end{lstlisting}
+After installation, startup putty by running
+\begin{lstlisting}[language=sh]
+putty
+\end{lstlisting}
+For a first-time setup, apply the following configuration:
+\begin{table}[H]
+	\centering
+	\begin{tabular}{l r}
+		Connection Type: & Serial\\
+		Serial line:	& /dev/ttyACM0\\
+		Speed			& 57600\\
+		Saved Sessions & PX4 Session\\
+	\end{tabular}
+\end{table}
+After setting the configuration, press Save. Every time putty is started, the PX4 Session will be available and can be loaded to start communicating with the PX4.\\
+Information about the PX4 System Console can be found at \cite{NSH}. The most usefull commands are:
+\begin{lstlisting}[language=sh]
+ls
+\end{lstlisting}
+which displays all the directories currently present on the Pixhawk.
+\begin{lstlisting}[language=sh]
+free
+\end{lstlisting}
+which displays the memory allocation on the Pixhawk.
+\begin{lstlisting}[language=sh]
+help
+\end{lstlisting}
+which displays all commands available and the builtin apps present on the Pixhawk.
+\section{Install GPS Driver}
+This is a short description of the MarvelMind GPS driver software installation.\\
+\newline
+\textbf{Quick notes:}
+\begin{itemize}
+	\item This driver is not suited for commercial use.
+	\item This driver is only designed to accept Marvelmind communication messages. Which is defined as the NMEA 0183 sentanced based protocol, making use of the messages GPRMC, GPGGA, GPVTG and GPZDA.
+	\item This translates to a driver, which detects the messages and starts processing, instead of configuring the GPS device.
+	\item It disables the Ashtech gps driver and reads the GP gps messages and posts them to the uORB.
+\end{itemize}
+3-versions exist of the driver, (gps\_v1, gps\_v2 and gps\_v3). First of all, gps\_v1 is designed to function in the PX4 autopilot pro flight stacked located at \url{https://github.com/PX4/Firmware}.\\ 
+\newline
+The second version is gps\_v2, which is designed to function for a custom px4 autopilot pro flight stack located at \url{https://github.com/darenlee/PixhawkPSP\_Firmware}.\\
+\newline
+And the third version, gps\_v3 is designed to function with the latest Pilot Support Package provided by Matlab, and currently discussed in this tutorial.
+\subsection{Installing V2}
+Given the PX4 firmware folder in \url{../px4};
+\begin{itemize}
+	\item place the files located in \url{gps\_v2/devices/src} into the following folder \url{../px4/Firmware/src/drivers/gps/devices/src}
+	\item place the files located in \url{gps\_v2} into the following folder: \url{../px4/Firmware/src/drivers/gps}
+	\item In the file \url{../px4/Firmware/src/drivers/gps/CMakeLists.txt}, include the Marvelmind driver by adding the line \begin{lstlisting}[language=c++]
+	devices/src/marv.cpp
+	\end{lstlisting}
+\end{itemize}
+
+
+
+In the file ../px4/Firmware/src/drivers/drv\_gps.h, include the Marvelmind driver mode in the enumeration
+GPS\_DRIVER\_MODE\_MARVELMIND
+\subsection{Installing V3}
+\section{External mode}
