@@ -1,5 +1,5 @@
 #include <ESP8266WiFi.h>
-#include <WiFiUDP.h>
+#include <WiFiUdp.h>
 #include "NatNetSDK2.h"
 
 /*******************************************************************************************************************************
@@ -26,7 +26,8 @@ IPAddress ipMulti(239, 255, 42, 99);          // Multicast declarations
 #define BUFFER_LENGTH 566                     // Buffer length, is the length of the expected received message
 byte incomingPacket[BUFFER_LENGTH];           // Incomming packet
 UDP_Packet_t MSG;                             // Message declaration
-String Optitrack_Message = "$OPTI,";          // Base Optitrack Message
+String Optitrack_Message;          // Base Optitrack Message
+int cnt = 0;
 
 /*******************************************************************************************************************************
    SETUP LOOP
@@ -112,7 +113,10 @@ void loop() {
     */
 
     Optitrack_Message = "$OPTI,";          // Base Optitrack Message
-    Optitrack_Message = String(Optitrack_Message + MSG.Frame.MocapData.FrameNr + ",");
+    //Optitrack_Message = String(Optitrack_Message + MSG.Frame.MocapData.FrameNr + ",");
+    cnt++;
+    Optitrack_Message = String(Optitrack_Message + cnt + ",");
+    //Optitrack_Message = String(Optitrack_Message + MSG.Frame.MocapData.FrameNr + ",");
     Optitrack_Message = String(Optitrack_Message + MSG.Frame.MocapData.RigidBodies[0].ID + ",");
     Optitrack_Message = String(Optitrack_Message + String(MSG.Frame.MocapData.RigidBodies[0].x, 3) + ",");
     Optitrack_Message = String(Optitrack_Message + String(MSG.Frame.MocapData.RigidBodies[0].y, 3) + ",");
@@ -121,13 +125,19 @@ void loop() {
     Optitrack_Message = String(Optitrack_Message + String(MSG.Frame.MocapData.RigidBodies[0].qy, 3) + ",");
     Optitrack_Message = String(Optitrack_Message + String(MSG.Frame.MocapData.RigidBodies[0].qz, 3) + ",");
     Optitrack_Message = String(Optitrack_Message + String(MSG.Frame.MocapData.RigidBodies[0].qw, 3) + ",");
-    Optitrack_Message = String(Optitrack_Message + String(MSG.Frame.MocapData.RigidBodies[0].MeanError, 3));
+    //Optitrack_Message = String(Optitrack_Message + String(MSG.Frame.MocapData.RigidBodies[0].MeanError, 3));    
+    if((Optitrack_Message.length() % 2) == 0){
+      Optitrack_Message = String(Optitrack_Message + String(MSG.Frame.MocapData.RigidBodies[0].MeanError, 3));
+    }else{
+      Optitrack_Message = String(Optitrack_Message + String(MSG.Frame.MocapData.RigidBodies[0].MeanError, 4));
+    }
 
     // CRC checksum
-    byte CRC = CalculateCRC(Optitrack_Message);
+    //Serial.println(Optitrack_Message);
+    uint8_t CRC = CalculateCRC(Optitrack_Message);
     Optitrack_Message = String(Optitrack_Message + "*" + String(CRC, HEX));
 
-    Serial.println(Optitrack_Message);
+      Serial.println(Optitrack_Message);
     //Serial.println(Optitrack_Message.length());
     /*
       Serial.printf("$OPTI");
@@ -240,10 +250,10 @@ void printWifiStatus() {
 /*******************************************************************************************************************************
    CALCULATE CRC CHECKSUM
  *******************************************************************************************************************************/
-byte CalculateCRC(String MSG) {
-  byte CRC;
+uint8_t CalculateCRC(String MSG) {
+  uint8_t CRC = 0;
   for (int i = 0; i < MSG.length(); i++) {
-    CRC ^= byte(MSG[i]);
+    CRC ^= MSG[i];
   }
   return CRC;
 }
