@@ -27,6 +27,7 @@ IPAddress ipMulti(239, 255, 42, 99);          // Multicast declarations
 byte incomingPacket[BUFFER_LENGTH];           // Incomming packet
 UDP_Packet_t MSG;                             // Message declaration
 String Optitrack_Message = "$OPTI,";          // Base Optitrack Message
+int cnt = 0;
 
 /*******************************************************************************************************************************
    SETUP LOOP
@@ -112,7 +113,9 @@ void loop() {
     */
 
     Optitrack_Message = "$OPTI,";          // Base Optitrack Message
-    Optitrack_Message = String(Optitrack_Message + MSG.Frame.MocapData.FrameNr + ",");
+    //Optitrack_Message = String(Optitrack_Message + MSG.Frame.MocapData.FrameNr + ",");
+    Optitrack_Message = String(Optitrack_Message + cnt + ",");
+    cnt = cnt + 1;
     Optitrack_Message = String(Optitrack_Message + MSG.Frame.MocapData.RigidBodies[0].ID + ",");
     Optitrack_Message = String(Optitrack_Message + String(MSG.Frame.MocapData.RigidBodies[0].x, 3) + ",");
     Optitrack_Message = String(Optitrack_Message + String(MSG.Frame.MocapData.RigidBodies[0].y, 3) + ",");
@@ -122,7 +125,7 @@ void loop() {
     Optitrack_Message = String(Optitrack_Message + String(MSG.Frame.MocapData.RigidBodies[0].qz, 3) + ",");
     Optitrack_Message = String(Optitrack_Message + String(MSG.Frame.MocapData.RigidBodies[0].qw, 3) + ",");
     Optitrack_Message = String(Optitrack_Message + String(MSG.Frame.MocapData.RigidBodies[0].MeanError, 3));
-
+    
     // CRC checksum
     byte CRC = CalculateCRC(Optitrack_Message);
     Optitrack_Message = String(Optitrack_Message + "*" + String(CRC, HEX));
@@ -241,9 +244,12 @@ void printWifiStatus() {
    CALCULATE CRC CHECKSUM
  *******************************************************************************************************************************/
 byte CalculateCRC(String MSG) {
-  byte CRC;
+  byte CRC = 0;
   for (int i = 0; i < MSG.length(); i++) {
     CRC ^= byte(MSG[i]);
-  }
+    //Serial.print(CRC, HEX);
+    //Serial.print("|");
+  }  
+  //Serial.println();
   return CRC;
 }
