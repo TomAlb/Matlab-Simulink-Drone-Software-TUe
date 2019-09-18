@@ -41,7 +41,9 @@
 #include <nuttx/arch.h>
 #endif
 
+
 #include <termios.h>
+
 #ifndef __PX4_QURT
 #include <poll.h>
 #endif
@@ -145,31 +147,31 @@ public:
 
 private:
 
-	int				_serial_fd;					///< serial interface to GPS
-	unsigned			_baudrate;					///< current baudrate
-	char				_port[20];					///< device / serial port path
-	bool				_healthy;					///< flag to signal if the GPS is ok
-	bool				_baudrate_changed;				///< flag to signal that the baudrate with the GPS has changed
-	bool				_mode_changed;					///< flag that the GPS mode has changed
-	bool        			_mode_auto;					///< if true, auto-detect which GPS is attached
-	gps_driver_mode_t		_mode;						///< current mode
+        int				_serial_fd;					///< serial interface to GPS
+        unsigned			_baudrate;					///< current baudrate
+        char				_port[20];					///< device / serial port path
+        bool				_healthy;					///< flag to signal if the GPS is ok
+        bool				_baudrate_changed;				///< flag to signal that the baudrate with the GPS has changed
+        bool				_mode_changed;					///< flag that the GPS mode has changed
+        bool        			_mode_auto;					///< if true, auto-detect which GPS is attached
+        gps_driver_mode_t		_mode;						///< current mode
         GPSHelper::Interface            _interface;					///< interface
-	GPSHelper			*_helper;					///< instance of GPS parser
-	GPS_Sat_Info			*_sat_info;					///< instance of GPS sat info data object
+        GPSHelper			*_helper;					///< instance of GPS parser
+        GPS_Sat_Info			*_sat_info;					///< instance of GPS sat info data object
         struct vehicle_gps_optitrack_s	_report_gps_optitrack;				///< uORB topic for gps optitrack
         orb_advert_t			_report_gps_optitrack_pub;      		///< uORB pub for gps optitrack
         int                             _gps_optitrack_orb_instance;			///< uORB multi-topic instance
-	struct vehicle_gps_position_s	_report_gps_pos;				///< uORB topic for gps position
-	orb_advert_t			_report_gps_pos_pub;				///< uORB pub for gps position
+        struct vehicle_gps_position_s	_report_gps_pos;				///< uORB topic for gps position
+        orb_advert_t			_report_gps_pos_pub;				///< uORB pub for gps position
         int                             _gps_orb_instance;				///< uORB multi-topic instance
-	struct satellite_info_s		*_p_report_sat_info;				///< pointer to uORB topic for satellite info
+        struct satellite_info_s		*_p_report_sat_info;				///< pointer to uORB topic for satellite info
         int				_gps_sat_orb_instance;				///< uORB multi-topic instance for satellite info
-	orb_advert_t			_report_sat_info_pub;				///< uORB pub for satellite info
-	float				_rate;						///< position update rate
-	float				_rate_rtcm_injection;				///< RTCM message injection rate
-	unsigned			_last_rate_rtcm_injection_count; 		///< counter for number of RTCM messages
-	bool				_fake_gps;					///< fake gps output
-	Instance 			_instance;
+        orb_advert_t			_report_sat_info_pub;				///< uORB pub for satellite info
+        float				_rate;						///< position update rate
+        float				_rate_rtcm_injection;				///< RTCM message injection rate
+        unsigned			_last_rate_rtcm_injection_count; 		///< counter for number of RTCM messages
+        bool				_fake_gps;					///< fake gps output
+        Instance 			_instance;
 
 	int _orb_inject_data_fd;
 
@@ -711,13 +713,14 @@ GPS::run()
 			case GPS_DRIVER_MODE_ASHTECH:
 				_helper = new GPSDriverAshtech(&GPS::callback, this, &_report_gps_pos, _p_report_sat_info);
 				break;
-            case GPS_DRIVER_MODE_MARVELMIND:
+				
+			case GPS_DRIVER_MODE_MARVELMIND:
                 _helper = new GPSDriverMarvelmind(&GPS::callback, this, &_report_gps_pos, _p_report_sat_info);
                 break;
 
-                        case GPS_DRIVER_MODE_OPTITRACK:
-                            _helper = new GPSDriverOptitrack(&GPS::callback, this, &_report_gps_pos, &_report_gps_optitrack, _p_report_sat_info);
-                            break;
+            case GPS_DRIVER_MODE_OPTITRACK:
+                _helper = new GPSDriverOptitrack(&GPS::callback, this, &_report_gps_pos, &_report_gps_optitrack, _p_report_sat_info);
+                break;
 
 			default:
 				break;
@@ -743,7 +746,7 @@ GPS::run()
 
 				while ((helper_ret = _helper->receive(TIMEOUT_5HZ)) > 0 && !should_exit()) {
 
-                                    if (helper_ret & 1) {
+					if (helper_ret & 1) {
 						publish();
 
 						last_rate_count++;
@@ -789,7 +792,7 @@ GPS::run()
 //						case GPS_DRIVER_MODE_OPTITRACK:
 //							mode_str = "OPTITRACK";
 //							break;
-//
+//										
 //						default:
 //							break;
 //						}
@@ -907,12 +910,13 @@ GPS::print_status()
 			break;
 
         case GPS_DRIVER_MODE_MARVELMIND:
-                        PX4_INFO("protocol: MARVELMIND");
-                        break;
+            PX4_INFO("protocol: MARVELMIND");
+            break;
 
-                case GPS_DRIVER_MODE_OPTITRACK:
-                        PX4_INFO("protocol: OPTITRACK");
-                        break;
+        case GPS_DRIVER_MODE_OPTITRACK:
+            PX4_INFO("protocol: OPTITRACK");
+            break;
+			
 		default:
 			break;
 		}
@@ -950,8 +954,8 @@ GPS::publish()
 	if (_instance == Instance::Main || _is_gps_main_advertised) {
 		orb_publish_auto(ORB_ID(vehicle_gps_position), &_report_gps_pos_pub, &_report_gps_pos, &_gps_orb_instance,
 				 ORB_PRIO_DEFAULT);
-                orb_publish_auto(ORB_ID(vehicle_gps_optitrack), &_report_gps_optitrack_pub, &_report_gps_optitrack, &_gps_optitrack_orb_instance,
-                                 ORB_PRIO_DEFAULT);
+		orb_publish_auto(ORB_ID(vehicle_gps_optitrack), &_report_gps_optitrack_pub, &_report_gps_optitrack, &_gps_optitrack_orb_instance,
+                                 ORB_PRIO_DEFAULT);																																		 
 		_is_gps_main_advertised = true;
 	}
 }
@@ -1008,7 +1012,7 @@ $ gps start -f
 	PRINT_MODULE_USAGE_PARAM_FLAG('s', "Enable publication of satellite info", true);
 
 	PRINT_MODULE_USAGE_PARAM_STRING('i', "uart", "spi|uart", "GPS interface", true);
-        PRINT_MODULE_USAGE_PARAM_STRING('p', nullptr, "ubx|mtk|ash|marv|opti", "GPS Protocol (default=auto select)", true);
+	PRINT_MODULE_USAGE_PARAM_STRING('p', nullptr, "ubx|mtk|ash|marv|opti", "GPS Protocol (default=auto select)", true);
 
 	PRINT_MODULE_USAGE_DEFAULT_COMMANDS();
 

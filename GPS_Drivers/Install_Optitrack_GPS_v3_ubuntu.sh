@@ -10,8 +10,8 @@
 Fetch_Repo="https://github.com/mathworks/PX4-Firmware.git (fetch)"
 Push_Repo="https://github.com/mathworks/PX4-Firmware.git (push)"
 
-#Fetch_Repo="https://github.com/PX4/Firmware.git (fetch)"
-#Push_Repo="https://github.com/PX4/Firmware.git (push)"
+Fetch_Repo="https://github.com/PX4/Firmware.git (fetch)"
+Push_Repo="https://github.com/PX4/Firmware.git (push)"
 
 echo "##############################################"
 echo "##############################################"
@@ -52,22 +52,22 @@ echo " to: "
 echo "$PX4_Path/src/drivers" 
 
 # Copy drv_gps.h
-cp "$Home_Path/drv_gps.h" "$PX4_Path/src/drivers"
+cp "$Home_Path/gps_optitrack_v3/drv_gps.h" "$PX4_Path/src/drivers"
 
 # Copy /gps_optitrack/CMakeLists.txt
-cp "$Home_Path/gps_optitrack/CMakeLists.txt" "$PX4_Path/src/drivers/gps"
+cp "$Home_Path/gps_optitrack_v3/CMakeLists.txt" "$PX4_Path/src/drivers/gps"
 
 # Copy /gps_optitrack/gps.cpp
-cp "$Home_Path/gps_optitrack/gps.cpp" "$PX4_Path/src/drivers/gps"
+cp "$Home_Path/gps_optitrack_v3/gps.cpp" "$PX4_Path/src/drivers/gps"
 
 # Copy /gps_optitrack/devices/src
-cp -r "$Home_Path/gps_optitrack/devices/src" "$PX4_Path/src/drivers/gps/devices"
+cp -r "$Home_Path/gps_optitrack_v3/devices/src" "$PX4_Path/src/drivers/gps/devices"
 
 # Copy /gps_optitrack/devices/src
-cp "$Home_Path/gps_optitrack/msg/vehicle_gps_optitrack.msg" "$PX4_Path/msg"
+cp "$Home_Path/gps_optitrack_v3/msg/vehicle_gps_optitrack.msg" "$PX4_Path/msg"
 
 # Copy /gps_optitrack/devices/src
-cp "$Home_Path/gps_optitrack/msg/CMakeLists.txt" "$PX4_Path/msg"
+cp "$Home_Path/gps_optitrack_v3/msg/CMakeLists.txt" "$PX4_Path/msg"
 
 
 
