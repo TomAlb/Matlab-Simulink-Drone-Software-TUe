@@ -154,17 +154,17 @@ int GPSDriverOptitrack::handleMessage(int len)
         mean_error = qx_orient*qy_orient*qz_orient*qw_orient;
 
 
-        _gps_optitrack.timestamp = hrt_absolute_time();
-        _gps_optitrack.frame_number = 10;
-        _gps_optitrack.rigid_body_ID = 10;
-        _gps_optitrack.pos_x = 10.10;
-        _gps_optitrack.pos_y = 20.20;
-        _gps_optitrack.pos_z = 30.30;
-        _gps_optitrack.orientation_qx = 10.10;
-        _gps_optitrack.orientation_qy = 20.20;
-        _gps_optitrack.orientation_qz = 30.30;
-        _gps_optitrack.orientation_qw = 40.40;
-        _gps_optitrack.mean_error = 0.0110;
+        _gps_optitrack->timestamp = hrt_absolute_time();
+        _gps_optitrack->frame_number = 10;
+        _gps_optitrack->rigid_body_ID = 10;
+        _gps_optitrack->pos_x = x_pos*1000;
+        _gps_optitrack->pos_y = y_pos*1000;
+        _gps_optitrack->pos_z = z_pos*1000;
+        _gps_optitrack->orientation_qx = 10.10;
+        _gps_optitrack->orientation_qy = 20.20;
+        _gps_optitrack->orientation_qz = 30.30;
+        _gps_optitrack->orientation_qw = 40.40;
+        _gps_optitrack->mean_error = 0.0110;
 
         ret = 1;
 
