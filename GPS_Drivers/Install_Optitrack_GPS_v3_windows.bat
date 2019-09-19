@@ -37,6 +37,9 @@ copy "%CD%\gps_optitrack_v3\CMakeLists.txt" "%path%\src\drivers\gps"
 ECHO gps.cpp
 copy "%CD%\gps_optitrack_v3\gps.cpp" "%path%\src\drivers\gps"
 
+ECHO drv_gps.h
+copy "%CD%\gps_optitrack_v3\drv_gps.h" "%path%\src\drivers"
+
 ECHO vehicle_gps_optitrack.msg
 copy "%CD%\gps_optitrack_v3\msg\vehicle_gps_optitrack.msg" "%path%\msg"
 
